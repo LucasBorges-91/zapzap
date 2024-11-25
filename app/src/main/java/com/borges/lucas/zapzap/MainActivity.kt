@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.CameraAlt
@@ -46,31 +48,47 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+sealed class NavItem(
+    val icon: ImageVector,
+    val label: String
+) {
+    data object Messages: NavItem(
+        icon = Icons.Default.Message,
+        label = "Messages"
+    )
+
+    data object Updates: NavItem(
+        icon = Icons.Default.Update,
+        label = "Updates"
+    )
+
+    data object Communities: NavItem(
+        icon = Icons.Default.People,
+        label = "Communities"
+    )
+
+    data object Calls: NavItem(
+        icon = Icons.Default.Call,
+        label = "Calls"
+    )
+}
+
+@OptIn( ExperimentalMaterial3Api::class )
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun App() {
     val items = remember {
         listOf(
-            NavItem(
-                icon = Icons.Default.Message,
-                label = "Message"
-            ),
-            NavItem(
-                icon = Icons.Default.Update,
-                label = "Updates"
-            ),
-            NavItem(
-                icon = Icons.Default.People,
-                label = "Communities"
-            ),
-            NavItem(
-                icon = Icons.Default.Call,
-                label = "Calls"
-            )
+            NavItem.Messages,
+            NavItem.Updates,
+            NavItem.Communities,
+            NavItem.Calls
         )
     }
     var selectedItem by remember {
         mutableStateOf( items.first() )
+    }
+    val pagerState = rememberPagerState {
+        items.size
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -108,19 +126,45 @@ fun App() {
             }
         }
     ) { innerPadding ->
-        ChatsListScreen(Modifier.padding(innerPadding))
+        HorizontalPager(
+            pagerState,
+            Modifier.padding( innerPadding )
+        ) { page ->
+            when ( items[page] ) {
+                NavItem.Calls -> CallsScreen()
+                NavItem.Communities -> CommunitiesScreen()
+                NavItem.Messages -> MessagetScreen()
+                NavItem.Updates -> UpdatesScreen()
+            }
+        }
     }
 }
 
-data class NavItem(
-    val icon: ImageVector,
-    val label: String
-)
+@Composable
+fun MessagetScreen( modifier: Modifier = Modifier ) {
+    Box(modifier = modifier) {
+        Text(text = "Message")
+    }
+}
 
 @Composable
-fun ChatsListScreen( modifier: Modifier = Modifier ) {
+fun UpdatesScreen( modifier: Modifier = Modifier ) {
     Box(modifier = modifier) {
+        Text(text = "Updates")
+    }
+}
 
+@Composable
+fun CommunitiesScreen( modifier: Modifier = Modifier ) {
+    Box(modifier = modifier) {
+        Text(text = "Communities")
+    }
+}
+
+@Composable
+fun CallsScreen( modifier: Modifier = Modifier ) {
+    Box(modifier = modifier) {
+        Text(text = "Calls")
     }
 }
 
