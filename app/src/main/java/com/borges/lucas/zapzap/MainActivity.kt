@@ -25,6 +25,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -90,6 +91,12 @@ fun App() {
     val pagerState = rememberPagerState {
         items.size
     }
+    LaunchedEffect( selectedItem ) {
+        pagerState.animateScrollToPage( items.indexOf( selectedItem ) )
+    }
+    LaunchedEffect( pagerState.targetPage ) {
+        selectedItem = items[pagerState.targetPage]
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -142,28 +149,28 @@ fun App() {
 
 @Composable
 fun MessagetScreen( modifier: Modifier = Modifier ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         Text(text = "Message")
     }
 }
 
 @Composable
 fun UpdatesScreen( modifier: Modifier = Modifier ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         Text(text = "Updates")
     }
 }
 
 @Composable
 fun CommunitiesScreen( modifier: Modifier = Modifier ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         Text(text = "Communities")
     }
 }
 
 @Composable
 fun CallsScreen( modifier: Modifier = Modifier ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         Text(text = "Calls")
     }
 }
